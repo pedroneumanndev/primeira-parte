@@ -261,6 +261,100 @@
       cursor: pointer;
     }
 
+    .faq {
+      background: #e7e7e7;
+      padding: clamp(34px, 10vw, 44px) clamp(10px, 3vw, 14px) clamp(26px, 8vw, 34px);
+    }
+
+    .faq-title {
+      text-align: center;
+      font-size: clamp(34px, 10vw, 44px);
+      line-height: 1;
+      color: #592515;
+      margin-bottom: clamp(20px, 6vw, 28px);
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: #efebe6;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .faq-toggle {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 16px 14px;
+      cursor: pointer;
+      color: #111;
+      font-family: "Flame", Arial, sans-serif;
+      font-size: clamp(18px, 5.2vw, 23px);
+      line-height: 1.18;
+    }
+
+    .faq-icon {
+      flex: 0 0 28px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #5a2716;
+      position: relative;
+    }
+
+    .faq-icon::before,
+    .faq-icon::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: #fff;
+      transform: translate(-50%, -50%);
+      border-radius: 2px;
+    }
+
+    .faq-icon::before {
+      width: 14px;
+      height: 3px;
+    }
+
+    .faq-icon::after {
+      width: 3px;
+      height: 14px;
+      transition: opacity 220ms ease;
+    }
+
+    .faq-item.open .faq-icon::after {
+      opacity: 0;
+    }
+
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 360ms ease;
+    }
+
+    .faq-content-inner {
+      padding: 0 14px 16px;
+      font-size: clamp(17px, 5vw, 24px);
+      line-height: 1.22;
+      color: #111;
+    }
+
+    .faq-item.open .faq-content {
+      max-height: 360px;
+    }
+
     @media (max-width: 360px) {
       .advantages {
         padding: 52px 14px 42px;
@@ -281,6 +375,11 @@
 
       .how-cta {
         width: 92vw;
+      }
+
+      .faq {
+        padding-left: 8px;
+        padding-right: 8px;
       }
     }
 
@@ -348,12 +447,12 @@
       <article class="feature reveal reveal-left">
         <img class="feature-icon" src="imagens/hambuerguer.png" alt="" aria-hidden="true" />
         <h3 class="feature-title">Retire sem filas</h3>
-        <p class="feature-text">Diga "adeus" às filas, pague pelo App BK e retire no restaurante, balcão ou drive-thru Burger King.</p>
+        <p class="feature-text">Diga "adeus" às filas, pague pelo App BK e entregamos rapidinho para você.</p>
       </article>
 
       <article class="feature reveal reveal-right">
         <img class="feature-icon" src="imagens/coroa.png" alt="" aria-hidden="true" />
-        <h3 class="feature-title">Clube BK</h3>
+        <h3 class="feature-title">Promos BK</h3>
         <p class="feature-text">Todos os benefícios e vantagens do Clube BK na palma da sua mão.</p>
       </article>
     </section>
@@ -368,7 +467,7 @@
           <img class="step-img-1" src="imagens/app-bk-icone.4e94c32.svg" alt="" aria-hidden="true" />
         </div>
         <h3 class="how-step-title">Vá para o App BK</h3>
-        <p class="how-step-text">Um único cadastro para aproveitar todos os benefícios. Sempre ganhando pontos no <u>Clube BK</u>, é claro.</p>
+        <p class="how-step-text">Um único cadastro para aproveitar todos os benefícios. Sempre ganhando pontos no Clube BK, é claro.</p>
       </article>
 
       <div class="how-arrow a1 reveal reveal-down" aria-hidden="true" data-delay="80"><img src="imagens/seta1.png" alt="" /></div>
@@ -377,7 +476,7 @@
         <div class="how-circle">
           <img class="step-img-2" src="imagens/2imagem.svg" alt="" aria-hidden="true" />
         </div>
-        <h3 class="how-step-title">Escolha seu favorito</h3>
+        <h3 class="how-step-title">Escolha seu combo favorito</h3>
         <p class="how-step-text">Conheça o nosso cardápio completo com descontos, combos, adicionais e ofertas exclusivas no App BK.</p>
       </article>
 
@@ -397,11 +496,65 @@
         <div class="how-circle">
           <img class="step-img-4" src="imagens/4imagem.svg" alt="" aria-hidden="true" />
         </div>
-        <h3 class="how-step-title">Retire no BK</h3>
-        <p class="how-step-text">Tá pago? Toque no botão Produzir Pedido no App BK e retire sem filas no balcão, ou se preferir, no drive-thru do Burger King.</p>
+        <h3 class="how-step-title">entrega na sua casa</h3>
+        <p class="how-step-text">Frete grátis garantido? Peça agora no App BK e receba seu lanche quentinho.</p>
       </article>
 
       <button class="how-cta reveal reveal-up" type="button" data-delay="120">Baixe o App BK</button>
+    </section>
+
+    <section class="faq" aria-label="Perguntas frequentes">
+      <h2 class="faq-title reveal reveal-up">Perguntas frequentes</h2>
+
+      <div class="faq-list">
+        <article class="faq-item open reveal reveal-up">
+          <button class="faq-toggle" type="button" aria-expanded="true">
+            <span> O que é este app?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Este site é uma iniciativa temporária do BK, criada para divulgar um app exclusivo de promoções. Aqui você pode conhecer as ofertas disponíveis, acessar benefícios especiais e ser direcionado para a melhor experiência de pedido.
+            </div>
+          </div>
+        </article>
+
+        <article class="faq-item reveal reveal-up">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            <span>Este site é oficial do Burger King?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Sim. Esta é uma ação promocional temporária do BK para facilitar o acesso às ofertas e incentivar o uso do aplicativo oficial de promoções.
+            </div>
+          </div>
+        </article>
+
+        <article class="faq-item reveal reveal-up">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            <span>Como o site encontra o BK mais próximo de mim?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Utilizamos sua localização para identificar automaticamente a unidade do BK mais próxima. Assim, você recebe ofertas válidas na sua região e pode aproveitar entrega gratuita diretamente no seu endereço
+            </div>
+          </div>
+        </article>
+
+        <article class="faq-item reveal reveal-up">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            <span>Preciso baixar o app para aproveitar as promoções?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+             Sim. Algumas promoções são exclusivas do aplicativo. Ao tocar no botão indicado, você será direcionado para baixar o app oficial e ativar suas ofertas.
+            </div>
+          </div>
+        </article>
+      </div>
     </section>
   </main>
   <script>
@@ -433,6 +586,27 @@
 
       revealEls.forEach(function (el) {
         observer.observe(el);
+      });
+
+      var faqItems = Array.prototype.slice.call(document.querySelectorAll(".faq-item"));
+      var faqButtons = Array.prototype.slice.call(document.querySelectorAll(".faq-toggle"));
+
+      faqButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var item = btn.closest(".faq-item");
+          var isOpen = item.classList.contains("open");
+
+          faqItems.forEach(function (it) {
+            it.classList.remove("open");
+            var b = it.querySelector(".faq-toggle");
+            if (b) b.setAttribute("aria-expanded", "false");
+          });
+
+          if (!isOpen) {
+            item.classList.add("open");
+            btn.setAttribute("aria-expanded", "true");
+          }
+        });
       });
     })();
   </script>
