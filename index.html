@@ -145,22 +145,34 @@
       z-index: 0;
     }
 
-    .entry-content {
-      position: relative;
+    .entry-logo-wrap {
+      position: absolute;
       z-index: 1;
-      height: 100%;
+      top: calc(34px + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
       display: flex;
-      flex-direction: column;
-      color: var(--ink);
+      justify-content: center;
+      pointer-events: none;
     }
 
     .logo {
       width: clamp(108px, 32vw, 145px);
       height: auto;
-      margin: calc(34px + env(safe-area-inset-top)) auto 36px;
       display: block;
       mix-blend-mode: multiply;
       filter: contrast(1.08) saturate(1.06);
+    }
+
+    .entry-text-wrap {
+      position: absolute;
+      z-index: 1;
+      top: calc(240px + env(safe-area-inset-top));
+      left: 0;
+      right: 0;
+      color: var(--ink);
+      pointer-events: none;
     }
 
     .title {
@@ -185,11 +197,19 @@
       white-space: nowrap;
     }
 
-    .enter-btn {
+    .entry-button-wrap {
       position: absolute;
-      left: 50%;
+      z-index: 2;
+      left: 0;
+      right: 0;
       bottom: calc(34px + env(safe-area-inset-bottom));
-      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      padding-inline: 16px;
+    }
+
+    .enter-btn {
+      position: relative;
       width: min(76%, 360px);
       min-height: 74px;
       border: 0;
@@ -204,6 +224,7 @@
       cursor: pointer;
       box-shadow: 0 5px 12px rgba(22, 10, 7, 0.2);
       opacity: 0;
+      transform: translateY(16px);
       transition:
         opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
         transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
@@ -213,7 +234,7 @@
 
     body.intro-done .enter-btn {
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translateY(0);
       transition-delay: 0.85s;
     }
 
@@ -222,7 +243,7 @@
     }
 
     .enter-btn:active {
-      transform: translate(-50%, 1px);
+      transform: translateY(1px);
     }
 
     .gallery-view {
@@ -333,7 +354,7 @@
 
       .enter-btn {
         opacity: 1;
-        transform: translate(-50%, 0);
+        transform: translateY(0);
         transition: none;
       }
 
@@ -367,12 +388,18 @@
         />
       </svg>
 
-      <main class="entry-content">
+      <div class="entry-logo-wrap">
         <img class="logo" src="imgs/cacau-show (1).svg" alt="Logo Cacau Show" />
+      </div>
+
+      <div class="entry-text-wrap">
         <h1 class="title">Bem-vindo</h1>
         <h2 class="subtitle">Cacau Show Solid&aacute;ria</h2>
+      </div>
+
+      <div class="entry-button-wrap">
         <button class="enter-btn" id="startBtn" type="button">iniciar</button>
-      </main>
+      </div>
     </div>
   </section>
 
