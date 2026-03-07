@@ -240,6 +240,177 @@
       transform: translateY(1px);
     }
 
+    .signup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(20, 8, 5, 0.38);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+
+    .signup-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin-inline: auto;
+      width: min(100%, 430px);
+      background: #f8f2e9;
+      border-radius: 28px 28px 0 0;
+      padding: 16px 18px calc(20px + env(safe-area-inset-bottom));
+      box-shadow: 0 -12px 30px rgba(24, 10, 7, 0.25);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body.signup-open {
+      overflow: hidden;
+    }
+
+    body.signup-open .signup-overlay {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    body.signup-open .signup-sheet {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 42px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(79, 38, 24, 0.24);
+      margin: 2px auto 14px;
+    }
+
+    .sheet-title {
+      margin: 0 0 2px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      color: var(--brown);
+      text-align: center;
+    }
+
+    .sheet-subtitle {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: 14px;
+      color: #654235;
+    }
+
+    .close-sheet-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: #eadbcb;
+      color: #4f2618;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .signup-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 13px;
+      color: #5d3a2d;
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid #ceb6a4;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 15px;
+      color: #2b1812;
+      background: #fffaf3;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #8a4a34;
+      box-shadow: 0 0 0 3px rgba(138, 74, 52, 0.16);
+    }
+
+    .submit-btn {
+      margin-top: 6px;
+      min-height: 54px;
+      border: 0;
+      border-radius: 28px;
+      background: var(--button);
+      color: #fff;
+      font-size: 23px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    .status-view {
+      display: none;
+      padding-top: 8px;
+    }
+
+    .status-title {
+      margin: 0 0 12px;
+      text-align: center;
+      color: var(--brown);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 25px;
+    }
+
+    .status-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-item {
+      border-radius: 14px;
+      padding: 12px;
+      background: #ead8c5;
+      color: #6a4334;
+      font-weight: 700;
+      opacity: 0.5;
+      transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .status-item.active {
+      opacity: 1;
+      background: #7a3d29;
+      color: #fff;
+    }
+
+    .status-item.done {
+      opacity: 1;
+      background: #3b6e42;
+      color: #fff;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .intro {
         display: none;
@@ -305,14 +476,72 @@
       </div>
 
       <div class="entry-button-wrap">
-        <button class="enter-btn" id="startBtn" type="button">iniciar</button>
+        <button class="enter-btn" id="startBtn" type="button">continuar</button>
       </div>
     </div>
   </section>
 
+  <div class="signup-overlay" id="signupOverlay" aria-hidden="true">
+    <div class="signup-sheet" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+      <button class="close-sheet-btn" id="closeSheetBtn" type="button" aria-label="Fechar cadastro">x</button>
+      <div class="sheet-handle" aria-hidden="true"></div>
+
+      <div class="form-view" id="formView">
+        <h3 class="sheet-title" id="signupTitle">Cadastro</h3>
+        <p class="sheet-subtitle">Preencha seus dados para continuar</p>
+
+        <form class="signup-form" id="signupForm">
+          <div class="field">
+            <label for="cpfInput">CPF</label>
+            <input id="cpfInput" name="cpf" type="text" inputmode="numeric" autocomplete="off" required />
+          </div>
+
+          <div class="field">
+            <label for="nameInput">Nome completo</label>
+            <input id="nameInput" name="nomeCompleto" type="text" autocomplete="name" required />
+          </div>
+
+          <div class="field">
+            <label for="emailInput">E-mail</label>
+            <input id="emailInput" name="email" type="email" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <label for="passwordInput">Senha</label>
+            <input id="passwordInput" name="senha" type="password" autocomplete="new-password" minlength="6" required />
+          </div>
+
+          <div class="field">
+            <label for="phoneInput">N&uacute;mero de celular</label>
+            <input id="phoneInput" name="celular" type="tel" inputmode="numeric" autocomplete="tel" required />
+          </div>
+
+          <button class="submit-btn" type="submit">continuar</button>
+        </form>
+      </div>
+
+      <div class="status-view" id="statusView" aria-live="polite">
+        <h3 class="status-title">Valida&ccedil;&atilde;o</h3>
+        <ul class="status-list">
+          <li class="status-item" data-step="0">Confirmando dados...</li>
+          <li class="status-item" data-step="1">Verificando compatibilidade com a campanha...</li>
+          <li class="status-item" data-step="2">Dados compat&iacute;veis.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function () {
       var intro = document.getElementById("intro");
+      var startBtn = document.getElementById("startBtn");
+      var signupOverlay = document.getElementById("signupOverlay");
+      var closeSheetBtn = document.getElementById("closeSheetBtn");
+      var signupForm = document.getElementById("signupForm");
+      var formView = document.getElementById("formView");
+      var statusView = document.getElementById("statusView");
+      var cpfInput = document.getElementById("cpfInput");
+      var statusItems = Array.prototype.slice.call(document.querySelectorAll(".status-item"));
 
       if (!intro) return;
 
@@ -331,6 +560,66 @@
           intro.remove();
         }, 620);
       }, 3050);
+
+      function openSignup() {
+        document.body.classList.add("signup-open");
+        signupOverlay.setAttribute("aria-hidden", "false");
+        window.setTimeout(function () {
+          cpfInput.focus();
+        }, 80);
+      }
+
+      function closeSignup() {
+        document.body.classList.remove("signup-open");
+        signupOverlay.setAttribute("aria-hidden", "true");
+      }
+
+      function resetStatus() {
+        statusItems.forEach(function (item) {
+          item.classList.remove("active");
+          item.classList.remove("done");
+        });
+      }
+
+      function runValidationSequence(stepIndex) {
+        if (stepIndex >= statusItems.length) {
+          window.setTimeout(function () {
+            document.body.innerHTML = "";
+            document.body.style.background = "#ffffff";
+          }, 700);
+          return;
+        }
+
+        var currentItem = statusItems[stepIndex];
+        currentItem.classList.add("active");
+
+        window.setTimeout(function () {
+          currentItem.classList.remove("active");
+          currentItem.classList.add("done");
+          runValidationSequence(stepIndex + 1);
+        }, 1150);
+      }
+
+      startBtn.addEventListener("click", openSignup);
+      closeSheetBtn.addEventListener("click", closeSignup);
+
+      signupOverlay.addEventListener("click", function (event) {
+        if (event.target === signupOverlay) closeSignup();
+      });
+
+      signupForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (!signupForm.checkValidity()) {
+          signupForm.reportValidity();
+          return;
+        }
+
+        formView.style.display = "none";
+        statusView.style.display = "block";
+        resetStatus();
+        runValidationSequence(0);
+      });
     })();
   </script>
 </body>
