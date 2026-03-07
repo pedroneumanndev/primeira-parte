@@ -11,9 +11,6 @@
       --ink: #f3dfc9;
       --button: #7a3d29;
       --button-hover: #8a4a34;
-      --gallery-top: #5a2c1b;
-      --gallery-bottom: #f2f2f4;
-      --wave-time: 7s;
     }
 
     * {
@@ -121,16 +118,13 @@
       visibility: visible;
     }
 
-    body.show-gallery .entry-view {
-      opacity: 0;
-      transform: translateX(-8%);
-      visibility: hidden;
-      pointer-events: none;
-    }
-
     .entry-shell {
       position: relative;
       width: min(100%, 430px);
+      height: 100vh;
+      min-height: 100vh;
+      height: 100dvh;
+      min-height: 100dvh;
       height: 100svh;
       max-height: 100svh;
       overflow: hidden;
@@ -202,7 +196,7 @@
       z-index: 2;
       left: 0;
       right: 0;
-      bottom: calc(34px + env(safe-area-inset-bottom));
+      bottom: calc(20px + env(safe-area-inset-bottom));
       display: flex;
       justify-content: center;
       padding-inline: 16px;
@@ -246,100 +240,6 @@
       transform: translateY(1px);
     }
 
-    .gallery-view {
-      position: fixed;
-      inset: 0;
-      z-index: 15;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: translateX(12%);
-      transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s ease;
-      background: var(--gallery-bottom);
-    }
-
-    body.show-gallery .gallery-view {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
-
-    .gallery-carousel {
-      width: 100vw;
-      height: 100svh;
-      display: flex;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .gallery-carousel::-webkit-scrollbar {
-      display: none;
-    }
-
-    .gallery-slide {
-      position: relative;
-      flex: 0 0 100vw;
-      width: 100vw;
-      height: 100svh;
-      scroll-snap-align: start;
-      overflow: hidden;
-      background: var(--gallery-bottom);
-    }
-
-    .gallery-top {
-      position: relative;
-      height: 53svh;
-      background: var(--gallery-top);
-      overflow: hidden;
-    }
-
-    .gallery-wave {
-      position: absolute;
-      left: -6%;
-      width: 112%;
-      bottom: -1px;
-      height: 110px;
-      animation: waveFloat var(--wave-time) ease-in-out infinite;
-    }
-
-    @keyframes waveFloat {
-      0%,
-      100% {
-        transform: translateX(-18px);
-      }
-      50% {
-        transform: translateX(18px);
-      }
-    }
-
-    .art-wrap {
-      position: absolute;
-      left: 50%;
-      top: calc(70px + env(safe-area-inset-top));
-      transform: translateX(-50%);
-      width: min(84vw, 360px);
-      height: min(35vh, 360px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-
-    .art-wrap img {
-      width: auto;
-      max-width: 100%;
-      max-height: 100%;
-      height: auto;
-      object-fit: contain;
-      display: block;
-      filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.18));
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .intro {
         display: none;
@@ -357,17 +257,24 @@
         transform: translateY(0);
         transition: none;
       }
+    }
 
-      .gallery-view {
-        transition: none;
+    @media (max-height: 760px) {
+      .entry-logo-wrap {
+        top: calc(22px + env(safe-area-inset-top));
       }
 
-      .gallery-carousel {
-        scroll-behavior: auto;
+      .entry-text-wrap {
+        top: calc(186px + env(safe-area-inset-top));
       }
 
-      .gallery-wave {
-        animation: none;
+      .entry-button-wrap {
+        bottom: calc(10px + env(safe-area-inset-bottom));
+      }
+
+      .enter-btn {
+        min-height: 62px;
+        font-size: clamp(22px, 7vw, 34px);
       }
     }
   </style>
@@ -403,57 +310,9 @@
     </div>
   </section>
 
-  <section class="gallery-view" id="galleryView" aria-label="Galeria lateral">
-    <main class="gallery-carousel" id="galleryCarousel">
-      <section class="gallery-slide">
-        <div class="gallery-top">
-          <div class="art-wrap">
-            <img src="imgs/01cll.png" alt="Imagem 01" />
-          </div>
-          <svg class="gallery-wave" viewBox="0 0 760 120" preserveAspectRatio="none" aria-hidden="true">
-            <path fill="#f2f2f4" d="M0,62C86,44 173,44 260,62C340,79 420,80 500,64C586,46 673,46 760,62V120H0Z" />
-          </svg>
-        </div>
-      </section>
-
-      <section class="gallery-slide">
-        <div class="gallery-top">
-          <div class="art-wrap">
-            <img src="imgs/loc.png" alt="Imagem localizacao" />
-          </div>
-          <svg class="gallery-wave" viewBox="0 0 760 120" preserveAspectRatio="none" aria-hidden="true">
-            <path fill="#f2f2f4" d="M0,62C86,44 173,44 260,62C340,79 420,80 500,64C586,46 673,46 760,62V120H0Z" />
-          </svg>
-        </div>
-      </section>
-
-      <section class="gallery-slide">
-        <div class="gallery-top">
-          <div class="art-wrap">
-            <img src="imgs/sacola.png" alt="Imagem sacola" />
-          </div>
-          <svg class="gallery-wave" viewBox="0 0 760 120" preserveAspectRatio="none" aria-hidden="true">
-            <path fill="#f2f2f4" d="M0,62C86,44 173,44 260,62C340,79 420,80 500,64C586,46 673,46 760,62V120H0Z" />
-          </svg>
-        </div>
-      </section>
-    </main>
-  </section>
-
   <script>
     (function () {
       var intro = document.getElementById("intro");
-      var startBtn = document.getElementById("startBtn");
-      var galleryCarousel = document.getElementById("galleryCarousel");
-
-      if (startBtn) {
-        startBtn.addEventListener("click", function () {
-          document.body.classList.add("show-gallery");
-          if (galleryCarousel) {
-            galleryCarousel.scrollLeft = 0;
-          }
-        });
-      }
 
       if (!intro) return;
 
