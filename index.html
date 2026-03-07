@@ -12,6 +12,9 @@
       --button: #7a3d29;
       --button-hover: #8a4a34;
       --logo-shift-x: 0px;
+      --gallery-top: #5a2c1b;
+      --gallery-bottom: #f2f2f4;
+      --wave-time: 7s;
     }
 
 
@@ -22,13 +25,16 @@
     html,
     body {
       width: 100%;
+      height: 100%;
       margin: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
     }
 
     body {
       min-height: 100dvh;
+      height: 100dvh;
       background: var(--bg);
-      overflow: hidden;
       font-family: Arial, Helvetica, sans-serif;
       color: var(--ink);
     }
@@ -40,6 +46,19 @@
       height: 100vh;
       display: block;
       z-index: 0;
+    }
+
+    .entry-view {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    body.show-gallery .entry-view {
+      opacity: 0;
+      transform: translateX(-8%);
+      pointer-events: none;
     }
 
     .page-content {
@@ -131,7 +150,7 @@
     .screen {
       position: relative;
       z-index: 1;
-      min-height: 100dvh;
+      height: 100dvh;
       width: min(100%, 430px);
       margin: 0 auto;
       padding: calc(18px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
@@ -140,6 +159,7 @@
       align-items: stretch;
       justify-content: flex-start;
       gap: 0;
+      overflow: hidden;
     }
 
     .logo {
@@ -159,7 +179,7 @@
       align-self: flex-start;
       padding-left: 18px;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(24px, 8vw, 40px);
+      font-size: clamp(25px, 7vw, 36px);
       line-height: 1.04;
       letter-spacing: 0;
       font-weight: 700;
@@ -175,7 +195,7 @@
       align-self: flex-start;
       padding-left: 18px;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(24px, 8vw, 40px);
+      font-size: clamp(21px, 5.7vw, 30px);
       line-height: 1.04;
       font-weight: 700;
       color: var(--ink);
@@ -184,10 +204,11 @@
     }
 
     .enter-btn {
-      width: min(76%, 420px);
-      align-self: center;
-      margin-top: auto;
-      margin-bottom: calc(clamp(56px, 10vh, 112px) + env(safe-area-inset-bottom));
+      width: min(76vw, 420px);
+      position: fixed;
+      left: 50%;
+      bottom: calc(clamp(36px, 8vh, 88px) + env(safe-area-inset-bottom));
+      margin: 0;
       border: 0;
       border-radius: 45px;
       min-height: 82px;
@@ -200,28 +221,123 @@
       font-weight: 700;
       cursor: pointer;
       opacity: 0;
-      transform: translateY(34px);
+      transform: translate(-50%, 34px);
       transition:
         opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
         transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
         background-color 0.2s ease;
       transition-delay: 0s;
       box-shadow: 0 5px 12px rgba(22, 10, 7, 0.2);
+      z-index: 3;
     }
 
     body.intro-done .enter-btn {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate(-50%, 0);
       transition-delay: 0.85s;
     }
 
     .enter-btn:hover {
       background: var(--button-hover);
-      transform: translateY(-1px);
+      transform: translate(-50%, -1px);
     }
 
     .enter-btn:active {
-      transform: translateY(1px);
+      transform: translate(-50%, 1px);
+    }
+
+    .gallery-view {
+      position: fixed;
+      inset: 0;
+      z-index: 8;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateX(12%);
+      transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s ease;
+      background: var(--gallery-bottom);
+    }
+
+    body.show-gallery .gallery-view {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+
+    .gallery-carousel {
+      width: 100vw;
+      height: 100dvh;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .gallery-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .gallery-slide {
+      position: relative;
+      flex: 0 0 100vw;
+      width: 100vw;
+      height: 100dvh;
+      scroll-snap-align: start;
+      overflow: hidden;
+      background: var(--gallery-bottom);
+    }
+
+    .gallery-top {
+      position: relative;
+      height: 53dvh;
+      background: var(--gallery-top);
+      overflow: hidden;
+    }
+
+    .gallery-wave {
+      position: absolute;
+      left: -6%;
+      width: 112%;
+      bottom: -1px;
+      height: 110px;
+      animation: waveFloat var(--wave-time) ease-in-out infinite;
+    }
+
+    @keyframes waveFloat {
+      0%,
+      100% {
+        transform: translateX(-18px);
+      }
+      50% {
+        transform: translateX(18px);
+      }
+    }
+
+    .art-wrap {
+      position: absolute;
+      left: 50%;
+      top: calc(70px + env(safe-area-inset-top));
+      transform: translateX(-50%);
+      width: min(84vw, 360px);
+      height: min(35vh, 360px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .art-wrap img {
+      width: auto;
+      max-width: 100%;
+      max-height: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.18));
     }
 
     @media (max-width: 520px) {
@@ -229,17 +345,22 @@
         width: 100%;
       }
 
-      .title {
-        margin-left: 72px;
-      }
-
-      .subtitle {
-        margin-left: -10px;
-      }
-
       .title,
       .subtitle {
         padding-left: 20px;
+      }
+
+      .logo {
+        margin-top: clamp(42px, 8vh, 64px);
+        margin-bottom: clamp(28px, 5.5vh, 46px);
+      }
+
+      .title {
+        margin-bottom: 6px;
+      }
+
+      .subtitle {
+        white-space: nowrap;
       }
     }
 
@@ -277,8 +398,21 @@
 
       .enter-btn {
         opacity: 1;
-        transform: none;
+        transform: translate(-50%, 0);
         transition: none;
+      }
+
+      .entry-view,
+      .gallery-view {
+        transition: none;
+      }
+
+      .gallery-carousel {
+        scroll-behavior: auto;
+      }
+
+      .gallery-wave {
+        animation: none;
       }
     }
 
@@ -290,34 +424,77 @@
     <img class="intro-logo" src="imgs/cacau-show (1).svg" alt="" />
   </div>
 
-  <svg class="background" viewBox="0 0 430 932" preserveAspectRatio="none" aria-hidden="true">
-    <rect width="430" height="932" fill="var(--bg)" />
-    <path
-      fill="var(--shape)"
-      d="M0,0H430V466C378,434 307,433 252,472C194,513 115,514 53,480C29,467 12,467 0,476Z"
-    />
-  </svg>
+  <section class="entry-view" id="entryView">
+    <svg class="background" viewBox="0 0 430 932" preserveAspectRatio="none" aria-hidden="true">
+      <rect width="430" height="932" fill="var(--bg)" />
+      <path
+        fill="var(--shape)"
+        d="M0,0H430V466C378,434 307,433 252,472C194,513 115,514 53,480C29,467 12,467 0,476Z"
+      />
+    </svg>
 
-  <main class="screen page-content">
-    <img
-      class="logo"
-      src="imgs/cacau-show (1).svg"
-      alt="Logo Cacau Show"
-    />
+    <main class="screen page-content">
+      <img
+        class="logo"
+        src="imgs/cacau-show (1).svg"
+        alt="Logo Cacau Show"
+      />
 
-    <h1 class="title">Bem-vindo</h1>
-    <h2 class="subtitle">Cacau Show Solid&aacute;ria</h2>
+      <h1 class="title">Bem-vindo</h1>
+      <h2 class="subtitle">Cacau Show Solid&aacute;ria</h2>
 
-    <button class="enter-btn" id="startBtn" type="button">iniciar</button>
-  </main>
+      <button class="enter-btn" id="startBtn" type="button">iniciar</button>
+    </main>
+  </section>
+
+  <section class="gallery-view" id="galleryView" aria-label="Galeria lateral">
+    <main class="gallery-carousel" id="galleryCarousel">
+      <section class="gallery-slide">
+        <div class="gallery-top">
+          <div class="art-wrap">
+            <img src="imgs/01cll.png" alt="Imagem 01" />
+          </div>
+          <svg class="gallery-wave" viewBox="0 0 760 120" preserveAspectRatio="none" aria-hidden="true">
+            <path fill="#f2f2f4" d="M0,62C86,44 173,44 260,62C340,79 420,80 500,64C586,46 673,46 760,62V120H0Z" />
+          </svg>
+        </div>
+      </section>
+
+      <section class="gallery-slide">
+        <div class="gallery-top">
+          <div class="art-wrap">
+            <img src="imgs/loc.png" alt="Imagem localizacao" />
+          </div>
+          <svg class="gallery-wave" viewBox="0 0 760 120" preserveAspectRatio="none" aria-hidden="true">
+            <path fill="#f2f2f4" d="M0,62C86,44 173,44 260,62C340,79 420,80 500,64C586,46 673,46 760,62V120H0Z" />
+          </svg>
+        </div>
+      </section>
+
+      <section class="gallery-slide">
+        <div class="gallery-top">
+          <div class="art-wrap">
+            <img src="imgs/sacola.png" alt="Imagem sacola" />
+          </div>
+          <svg class="gallery-wave" viewBox="0 0 760 120" preserveAspectRatio="none" aria-hidden="true">
+            <path fill="#f2f2f4" d="M0,62C86,44 173,44 260,62C340,79 420,80 500,64C586,46 673,46 760,62V120H0Z" />
+          </svg>
+        </div>
+      </section>
+    </main>
+  </section>
 
   <script>
     (function () {
       var intro = document.getElementById("intro");
       var startBtn = document.getElementById("startBtn");
+      var galleryCarousel = document.getElementById("galleryCarousel");
       if (startBtn) {
         startBtn.addEventListener("click", function () {
-          window.location.href = "cadastro.html";
+          document.body.classList.add("show-gallery");
+          if (galleryCarousel) {
+            galleryCarousel.scrollLeft = 0;
+          }
         });
       }
 
