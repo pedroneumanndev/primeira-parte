@@ -2,21 +2,19 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Cacau Show - Entrada</title>
   <style>
     :root {
-      --bg: #f4ede4;
-      --shape: #4f2618;
+      --cream: #f4ede4;
+      --brown: #4f2618;
       --ink: #f3dfc9;
       --button: #7a3d29;
       --button-hover: #8a4a34;
-      --logo-shift-x: 0px;
       --gallery-top: #5a2c1b;
       --gallery-bottom: #f2f2f4;
       --wave-time: 7s;
     }
-
 
     * {
       box-sizing: border-box;
@@ -32,59 +30,18 @@
     }
 
     body {
-      min-height: 100dvh;
-      height: 100dvh;
-      background: var(--bg);
       font-family: Arial, Helvetica, sans-serif;
-      color: var(--ink);
-    }
-
-    .background {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      display: block;
-      z-index: 0;
-    }
-
-    .entry-view {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      transition: opacity 0.45s ease, transform 0.45s ease;
-    }
-
-    body.show-gallery .entry-view {
-      opacity: 0;
-      transform: translateX(-8%);
-      pointer-events: none;
-    }
-
-    .page-content {
-      opacity: 0;
-      transform: translateY(16px);
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    body.intro-done .page-content {
-      opacity: 1;
-      transform: translateY(0);
-      visibility: visible;
-      pointer-events: auto;
+      background: var(--cream);
     }
 
     .intro {
       position: fixed;
       inset: 0;
-      z-index: 20;
+      z-index: 30;
       display: grid;
       place-items: center;
       overflow: hidden;
-      pointer-events: auto;
-      background: var(--bg);
+      background: var(--cream);
     }
 
     .intro-circle {
@@ -92,7 +49,7 @@
       width: 150px;
       aspect-ratio: 1 / 1;
       border-radius: 50%;
-      background: var(--shape);
+      background: var(--brown);
       transform: scale(0.08);
       animation: introCircleGrow 2.05s cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
     }
@@ -146,89 +103,112 @@
       }
     }
 
+    .entry-view {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: translateY(12px);
+      visibility: hidden;
+      transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s ease;
+    }
 
-    .screen {
+    body.intro-done .entry-view {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    body.show-gallery .entry-view {
+      opacity: 0;
+      transform: translateX(-8%);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .entry-shell {
+      position: relative;
+      width: min(100%, 430px);
+      height: 100svh;
+      max-height: 100svh;
+      overflow: hidden;
+      background: var(--cream);
+    }
+
+    .entry-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .entry-content {
       position: relative;
       z-index: 1;
-      height: 100dvh;
-      width: min(100%, 430px);
-      margin: 0 auto;
-      padding: calc(18px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+      height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      gap: 0;
-      overflow: hidden;
+      color: var(--ink);
     }
 
     .logo {
       width: clamp(108px, 32vw, 145px);
       height: auto;
-      margin: clamp(58px, 9.8vh, 84px) auto clamp(44px, 6.4vh, 62px);
-      opacity: 1;
+      margin: calc(34px + env(safe-area-inset-top)) auto 36px;
       display: block;
       mix-blend-mode: multiply;
       filter: contrast(1.08) saturate(1.06);
-      transform: translateX(var(--logo-shift-x));
     }
 
     .title {
       margin: 0;
-      text-align: left;
-      align-self: flex-start;
-      padding-left: 18px;
+      padding-inline: 22px;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(25px, 7vw, 36px);
-      line-height: 1.04;
-      letter-spacing: 0;
+      font-size: clamp(34px, 11vw, 48px);
+      line-height: 1;
       font-weight: 700;
-      width: 100%;
-      max-width: none;
-      white-space: nowrap;
-      margin-bottom: 4px;
       text-shadow: 0 1px 2px rgba(34, 15, 10, 0.35);
+      white-space: nowrap;
     }
 
     .subtitle {
-      margin: 0;
-      align-self: flex-start;
-      padding-left: 18px;
+      margin: 2px 0 0;
+      padding-inline: 22px;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(21px, 5.7vw, 30px);
-      line-height: 1.04;
+      font-size: clamp(24px, 7.1vw, 34px);
+      line-height: 1.08;
       font-weight: 700;
-      color: var(--ink);
-      white-space: nowrap;
       text-shadow: 0 1px 2px rgba(34, 15, 10, 0.35);
+      white-space: nowrap;
     }
 
     .enter-btn {
-      width: min(76vw, 420px);
-      position: fixed;
+      position: absolute;
       left: 50%;
-      bottom: calc(264px + env(safe-area-inset-bottom));
-      margin: 0;
+      bottom: calc(34px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: min(76%, 360px);
+      min-height: 74px;
       border: 0;
-      border-radius: 45px;
-      min-height: 82px;
-      padding: 14px 28px;
+      border-radius: 42px;
+      padding: 12px 26px;
       background: var(--button);
       color: #fff;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(26px, 7.1vw, 44px);
-      line-height: 1;
+      font-size: clamp(24px, 8vw, 40px);
       font-weight: 700;
+      line-height: 1;
       cursor: pointer;
+      box-shadow: 0 5px 12px rgba(22, 10, 7, 0.2);
       opacity: 0;
-      transform: translate(-50%, 34px);
       transition:
         opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
         transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
         background-color 0.2s ease;
       transition-delay: 0s;
-      box-shadow: 0 5px 12px rgba(22, 10, 7, 0.2);
-      z-index: 3;
     }
 
     body.intro-done .enter-btn {
@@ -239,7 +219,6 @@
 
     .enter-btn:hover {
       background: var(--button-hover);
-      transform: translate(-50%, -1px);
     }
 
     .enter-btn:active {
@@ -249,7 +228,7 @@
     .gallery-view {
       position: fixed;
       inset: 0;
-      z-index: 8;
+      z-index: 15;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -267,7 +246,7 @@
 
     .gallery-carousel {
       width: 100vw;
-      height: 100dvh;
+      height: 100svh;
       display: flex;
       overflow-x: auto;
       overflow-y: hidden;
@@ -285,7 +264,7 @@
       position: relative;
       flex: 0 0 100vw;
       width: 100vw;
-      height: 100dvh;
+      height: 100svh;
       scroll-snap-align: start;
       overflow: hidden;
       background: var(--gallery-bottom);
@@ -293,7 +272,7 @@
 
     .gallery-top {
       position: relative;
-      height: 53dvh;
+      height: 53svh;
       background: var(--gallery-top);
       overflow: hidden;
     }
@@ -340,59 +319,15 @@
       filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.18));
     }
 
-    @media (max-width: 520px) {
-      .screen {
-        width: 100%;
-      }
-
-      .title,
-      .subtitle {
-        padding-left: 20px;
-      }
-
-      .logo {
-        margin-top: clamp(42px, 8vh, 64px);
-        margin-bottom: clamp(28px, 5.5vh, 46px);
-      }
-
-      .title {
-        margin-bottom: 6px;
-      }
-
-      .subtitle {
-        white-space: nowrap;
-      }
-    }
-
-    @media (min-width: 521px) {
-      .screen {
-        padding-top: 56px;
-        padding-bottom: 40px;
-        align-items: center;
-      }
-
-      .logo {
-        margin-top: 28px;
-      }
-
-      .title,
-      .subtitle {
-        text-align: center;
-        align-self: center;
-        padding-left: 0;
-        width: 100%;
-        max-width: none;
-      }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .intro {
         display: none;
       }
 
-      .page-content {
+      .entry-view {
         opacity: 1;
         transform: none;
+        visibility: visible;
         transition: none;
       }
 
@@ -402,7 +337,6 @@
         transition: none;
       }
 
-      .entry-view,
       .gallery-view {
         transition: none;
       }
@@ -415,7 +349,6 @@
         animation: none;
       }
     }
-
   </style>
 </head>
 <body>
@@ -424,27 +357,23 @@
     <img class="intro-logo" src="imgs/cacau-show (1).svg" alt="" />
   </div>
 
-  <section class="entry-view" id="entryView">
-    <svg class="background" viewBox="0 0 430 932" preserveAspectRatio="none" aria-hidden="true">
-      <rect width="430" height="932" fill="var(--bg)" />
-      <path
-        fill="var(--shape)"
-        d="M0,0H430V466C378,434 307,433 252,472C194,513 115,514 53,480C29,467 12,467 0,476Z"
-      />
-    </svg>
+  <section class="entry-view" id="entryView" aria-label="Tela inicial">
+    <div class="entry-shell">
+      <svg class="entry-bg" viewBox="0 0 430 932" preserveAspectRatio="none" aria-hidden="true">
+        <rect width="430" height="932" fill="var(--cream)" />
+        <path
+          fill="var(--brown)"
+          d="M0,0H430V466C378,434 307,433 252,472C194,513 115,514 53,480C29,467 12,467 0,476Z"
+        />
+      </svg>
 
-    <main class="screen page-content">
-      <img
-        class="logo"
-        src="imgs/cacau-show (1).svg"
-        alt="Logo Cacau Show"
-      />
-
-      <h1 class="title">Bem-vindo</h1>
-      <h2 class="subtitle">Cacau Show Solid&aacute;ria</h2>
-
-      <button class="enter-btn" id="startBtn" type="button">iniciar</button>
-    </main>
+      <main class="entry-content">
+        <img class="logo" src="imgs/cacau-show (1).svg" alt="Logo Cacau Show" />
+        <h1 class="title">Bem-vindo</h1>
+        <h2 class="subtitle">Cacau Show Solid&aacute;ria</h2>
+        <button class="enter-btn" id="startBtn" type="button">iniciar</button>
+      </main>
+    </div>
   </section>
 
   <section class="gallery-view" id="galleryView" aria-label="Galeria lateral">
@@ -489,6 +418,7 @@
       var intro = document.getElementById("intro");
       var startBtn = document.getElementById("startBtn");
       var galleryCarousel = document.getElementById("galleryCarousel");
+
       if (startBtn) {
         startBtn.addEventListener("click", function () {
           document.body.classList.add("show-gallery");
