@@ -7,11 +7,14 @@
   <style>
     :root {
       --bg: #f4ede4;
-      --shape: #43190a;
+      --shape: #4f2618;
       --ink: #f3dfc9;
-      --button: #43190a;
-      --button-hover: #43190a;
+      --button: #7a3d29;
+      --button-hover: #8a4a34;
+      --logo-shift-x: 0px;
     }
+
+
     * {
       box-sizing: border-box;
     }
@@ -47,7 +50,7 @@
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
-    body.content-ready .page-content {
+    body.intro-done .page-content {
       opacity: 1;
       transform: translateY(0);
       visibility: visible;
@@ -72,17 +75,15 @@
       border-radius: 50%;
       background: var(--shape);
       transform: scale(0.08);
-      animation: introCircleGrow 2.9s cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
+      animation: introCircleGrow 2.05s cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
     }
 
     .intro-logo {
-      position: absolute;
-      left: 50%;
-      top: 50%;
+      position: relative;
       width: clamp(120px, 34vw, 172px);
       height: auto;
       opacity: 0;
-      transform: translate(-50%, calc(-50% + 20px)) scale(0.86);
+      transform: translateY(20px) scale(0.86);
       filter: brightness(0) invert(1);
       animation:
         introLogoReveal 0.7s ease 0.62s forwards,
@@ -103,19 +104,19 @@
     @keyframes introLogoReveal {
       to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+        transform: translateY(0) scale(1);
       }
     }
 
     @keyframes introLogoBounce {
       0% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: translateY(0) scale(1);
       }
       40% {
-        transform: translate(-50%, calc(-50% - 12px)) scale(1.04);
+        transform: translateY(-12px) scale(1.04);
       }
       100% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: translateY(0) scale(1);
       }
     }
 
@@ -145,13 +146,11 @@
       width: clamp(108px, 32vw, 145px);
       height: auto;
       margin: clamp(58px, 9.8vh, 84px) auto clamp(44px, 6.4vh, 62px);
-      align-self: center;
-      margin-inline: auto;
       opacity: 1;
       display: block;
-      object-fit: contain;
       mix-blend-mode: multiply;
       filter: contrast(1.08) saturate(1.06);
+      transform: translateX(var(--logo-shift-x));
     }
 
     .title {
@@ -210,7 +209,7 @@
       box-shadow: 0 5px 12px rgba(22, 10, 7, 0.2);
     }
 
-    body.content-ready .enter-btn {
+    body.intro-done .enter-btn {
       opacity: 1;
       transform: translateY(0);
       transition-delay: 0.85s;
@@ -326,19 +325,19 @@
 
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reduceMotion) {
-        document.body.classList.add("content-ready");
+        document.body.classList.add("intro-done");
         intro.remove();
         return;
       }
 
       window.setTimeout(function () {
+        document.body.classList.add("intro-done");
         intro.classList.add("out");
 
         window.setTimeout(function () {
-          document.body.classList.add("content-ready");
           intro.remove();
         }, 620);
-      }, 3600);
+      }, 3050);
     })();
   </script>
 </body>
