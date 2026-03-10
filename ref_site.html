@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69ae324c72aecbd833dd4117/0103d579b_logo.png" rel="icon" type="image/svg+xml"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <link href="https://doce-foco-solidario.base44.app/manifest.json" rel="manifest"/>
+  <title>
+   Páscoa Solidária
+  </title>
+  <script crossorigin="" src="/assets/index-Dj2UePsF.js" type="module">
+  </script>
+  <link crossorigin="" href="/assets/index-knt_g4Tl.css" rel="stylesheet"/>
+  <script type="module">
+   if (window.self === window.top) {
+  let lastPath = "";
+  function getPageNameFromPath(path) {
+    const segments = path.split("/").filter(Boolean);
+    return segments[0] || null;
+  }
+  function trackPageView() {
+    const path = window.location.pathname;
+    if (path === lastPath) return;
+    lastPath = path;
+    const pageName = getPageNameFromPath(path) || "home";
+    const appId = "69ae324c72aecbd833dd4117";
+    if (!appId) return;
+    fetch(`/app-logs/${appId}/log-user-in-app/${pageName}`, {
+      method: "POST",
+    }).catch(() => {});
+  }
+  const originalPushState = history.pushState.bind(history);
+  history.pushState = function (...args) {
+    originalPushState(...args);
+    trackPageView();
+  };
+  const originalReplaceState = history.replaceState.bind(history);
+  history.replaceState = function (...args) {
+    originalReplaceState(...args);
+    trackPageView();
+  };
+  window.addEventListener("popstate", trackPageView);
+  trackPageView();
+}
+  </script>
+  <meta content="Páscoa Solidária" property="og:title"/>
+  <meta content="Uma plataforma dedicada a entender o perfil e as necessidades dos consumidores para promover campanhas de Páscoa mais acessíveis e solidárias." property="og:description"/>
+  <meta content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/render/image/public/base44-prod/public/69ae324c72aecbd833dd4117/0103d579b_logo.png?width=1200&amp;height=630&amp;resize=contain" property="og:image"/>
+  <meta content="https://doce-foco-solidario.base44.app" property="og:url"/>
+  <meta content="website" property="og:type"/>
+  <meta content="Páscoa Solidária" property="og:site_name"/>
+  <meta content="summary_large_image" name="twitter:card"/>
+  <meta content="Páscoa Solidária" name="twitter:title"/>
+  <meta content="Uma plataforma dedicada a entender o perfil e as necessidades dos consumidores para promover campanhas de Páscoa mais acessíveis e solidárias." name="twitter:description"/>
+  <meta content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/render/image/public/base44-prod/public/69ae324c72aecbd833dd4117/0103d579b_logo.png?width=1200&amp;height=630&amp;resize=contain" name="twitter:image"/>
+  <meta content="https://doce-foco-solidario.base44.app" name="twitter:url"/>
+  <meta content="Uma plataforma dedicada a entender o perfil e as necessidades dos consumidores para promover campanhas de Páscoa mais acessíveis e solidárias." name="description"/>
+  <meta content="yes" name="mobile-web-app-capable"/>
+  <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+  <meta content="Páscoa Solidária" name="apple-mobile-web-app-title"/>
+  <link href="https://doce-foco-solidario.base44.app" rel="canonical"/>
+  <script async="true" data-app-id="69ae324c72aecbd833dd4117" data-platform-url="https://app.base44.com" src="/static/js/badge.js">
+  </script>
+ </head>
+ <body>
+  <div id="root">
+  </div>
+ </body>
+</html>
+

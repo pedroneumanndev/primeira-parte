@@ -1,0 +1,928 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Páscoa Solidária</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-inter: "Inter", sans-serif;
+      --font-playfair: "Playfair Display", serif;
+      --background: hsl(30 40% 97%);
+      --foreground: hsl(20 30% 15%);
+      --muted: hsl(30 20% 93%);
+      --muted-foreground: hsl(20 15% 50%);
+      --primary: hsl(25 60% 42%);
+      --primary-foreground: hsl(30 40% 97%);
+      --accent: hsl(38 70% 55%);
+      --border: hsl(30 25% 86%);
+      --card: hsl(30 30% 99%);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: var(--font-inter);
+    }
+
+    .app { min-height: 100vh; min-height: 100dvh; position: relative; overflow: hidden; }
+    .shape { position: absolute; border-radius: 999px; pointer-events: none; z-index: 0; }
+    .shape.top { width: 560px; height: 560px; top: -210px; right: -190px; background: hsl(25 60% 42% / 0.026); }
+    .shape.bottom { width: 460px; height: 460px; bottom: -230px; left: -180px; background: hsl(38 70% 55% / 0.05); }
+    .shape.mid { width: 340px; height: 340px; top: 56%; left: 54%; transform: translate(-50%, -50%); background: hsl(25 60% 42% / 0.02); }
+    .shape.logo-halo { width: 220px; height: 220px; top: -60px; left: 50%; transform: translateX(-50%); background: hsl(30 35% 85% / 0.22); }
+
+    .layout {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 24px 16px 28px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      align-content: start;
+    }
+
+    .screen { display: none; width: min(100%, 560px); margin: 0 auto; }
+    .screen.active { display: block; animation: screenInX 380ms ease both; }
+
+    .title-main {
+      margin: 0 0 10px;
+      text-align: center;
+      font-family: var(--font-playfair);
+      font-size: clamp(40px, 7vw, 56px);
+      line-height: 1.08;
+      font-weight: 700;
+    }
+
+    .title-main .primary { color: var(--primary); }
+    .sub { margin: 0 auto 18px; text-align: center; color: var(--muted-foreground); font-size: 15px; line-height: 1.45; max-width: 520px; }
+
+    .logo-badge {
+      width: 112px; height: 112px; border-radius: 24px; margin: 0 auto 10px;
+      background: hsl(30 32% 92%); display: grid; place-items: center;
+      color: var(--primary); font-size: 42px; font-weight: 700;
+      overflow: hidden;
+      box-shadow: 0 8px 18px hsl(30 25% 80% / 0.3), inset 0 1px 0 hsl(0 0% 100% / 0.45);
+      animation: floatY 2.8s ease-in-out infinite;
+    }
+
+    .logo-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand {
+      text-align: center;
+      color: var(--primary);
+      letter-spacing: 0.22em;
+      font-size: 12px;
+      margin: 0 0 18px;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 hsl(0 0% 100% / 0.35);
+    }
+
+    .steps { display: grid; gap: 13px; margin-bottom: 10px; }
+    .step-card {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 15px 14px 14px;
+      border: 1px solid hsl(30 18% 81%);
+      background: hsl(30 25% 97%);
+      border-radius: 16px;
+      box-shadow: 0 1px 0 hsl(0 0% 100% / 0.75), 0 2px 4px hsl(25 12% 78% / 0.12);
+      opacity: 0;
+      transform: translateY(14px);
+    }
+
+    .step-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 11px;
+      background: hsl(30 24% 91%);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    .step-icon svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .step-text { flex: 1 1 auto; }
+
+    .step-title {
+      margin: 0;
+      color: hsl(20 30% 14%);
+      font-size: 15px;
+      line-height: 1.32;
+      font-weight: 700;
+      letter-spacing: 0.005em;
+    }
+
+    .step-title .prefix {
+      color: var(--primary);
+      margin-right: 2px;
+    }
+
+    .step-desc {
+      margin: 4px 0 0;
+      color: hsl(20 18% 39%);
+      font-size: 13px;
+      line-height: 1.43;
+    }
+
+    .promo {
+      margin: 6px 0 14px;
+      border: 1px solid hsl(38 58% 72%);
+      border-radius: 12px;
+      background: hsl(38 68% 56% / 0.09);
+      color: hsl(20 22% 30%);
+      padding: 11px 12px 10px;
+      font-size: 12.5px;
+      text-align: center;
+      line-height: 1.35;
+      width: calc(100% - 2px);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .promo strong {
+      color: hsl(20 28% 18%);
+      font-weight: 700;
+    }
+
+    .btn {
+      border: 0; border-radius: 16px; font-family: var(--font-inter); font-weight: 600;
+      cursor: pointer; transition: 180ms ease;
+    }
+
+    .btn-arrow {
+      width: 16px;
+      height: 16px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .btn-arrow svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 180ms ease;
+    }
+
+    .btn-primary {
+      min-height: 56px; padding: 0 28px; font-size: 19px; color: var(--primary-foreground);
+      background: var(--primary); box-shadow: 0 10px 24px hsl(25 60% 42% / 0.22);
+      display: inline-flex; align-items: center; gap: 10px; justify-content: center;
+    }
+
+    .btn-primary:hover { background: hsl(25 60% 38%); transform: translateY(-1px); }
+    .btn-primary:not(:disabled):hover .btn-arrow svg { transform: translateX(4px); }
+    .btn-primary:not(:disabled):active { animation: btnHop 220ms ease; }
+    .btn-primary:not(:disabled):active .btn-arrow svg { transform: translateX(7px); }
+    .btn-primary:disabled { cursor: not-allowed; background: hsl(30 12% 82%); color: hsl(30 12% 62%); box-shadow: none; transform: none; }
+
+    .center { text-align: center; }
+
+    .data-screen { padding: 18px 12px 0; }
+
+    .data-screen h2 {
+      margin: 0 0 9px;
+      font-family: var(--font-playfair);
+      font-size: 56px !important;
+      line-height: 1.02 !important;
+      font-weight: 700;
+      letter-spacing: -0.012em;
+      color: hsl(20 32% 16%);
+    }
+
+    .data-screen .sub {
+      text-align: left;
+      margin: 0 0 23px;
+      max-width: none;
+      font-size: 16px !important;
+      line-height: 1.42 !important;
+      color: hsl(20 17% 44%);
+    }
+
+    .form { display: grid; gap: 20px; }
+    .field { display: grid; gap: 6px; }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 0;
+      color: hsl(20 28% 15%);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border: 2px solid hsl(30 24% 83%);
+      border-radius: 12px;
+      background: var(--card);
+      min-height: 48px;
+      padding: 0 11px;
+      box-shadow: 0 1px 2px hsl(25 18% 80% / 0.22);
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .input-wrap:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px hsl(25 60% 42% / 0.16);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 19px;
+      height: 19px;
+      color: hsl(20 28% 42%);
+      pointer-events: none;
+      display: grid;
+      place-items: center;
+      opacity: 1;
+    }
+
+    .input-icon svg {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .input-wrap input {
+      border: 0;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      padding-left: 34px;
+      font-size: 14px;
+      color: hsl(20 30% 28%);
+      font-family: var(--font-inter);
+      font-weight: 500;
+    }
+
+    .input-wrap input::placeholder {
+      color: hsl(20 17% 52%);
+    }
+
+    .data-next {
+      margin-top: 8px;
+      width: 100%;
+      justify-content: center;
+      min-height: 54px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      box-shadow: 0 10px 22px hsl(25 60% 42% / 0.22);
+      transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+    }
+
+    .data-next .btn-arrow svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 180ms ease;
+    }
+
+    .data-next:hover {
+      box-shadow: 0 14px 24px hsl(25 60% 42% / 0.24);
+      transform: translateY(-1px);
+    }
+
+    .data-next:hover .btn-arrow svg {
+      transform: translateX(4px);
+    }
+
+    .survey { width: min(100%, 560px); }
+    .progress-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--muted-foreground); }
+    .progress-head .percent { color: var(--primary); font-weight: 700; }
+    .progress-track { width: 100%; height: 8px; border-radius: 999px; background: var(--muted); overflow: hidden; margin-bottom: 26px; }
+    .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 260ms ease; }
+
+    .step-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .step-badge { width: 46px; height: 46px; border-radius: 14px; background: hsl(30 26% 90%); color: var(--primary); font-weight: 700; font-size: 17px; display: grid; place-items: center; }
+    .step-line { height: 1px; flex: 1; background: var(--border); }
+
+    .question { margin: 0 0 24px; font-family: var(--font-playfair); font-size: 24px; line-height: 1.22; letter-spacing: -0.01em; }
+    .question.entering { animation: slideQuestionIn 320ms ease both; }
+
+    .options { display: grid; gap: 12px; margin-bottom: 22px; }
+    .option {
+      width: 100%; border: 2px solid var(--border); border-radius: 20px; background: var(--card);
+      color: hsl(20 18% 43%); text-align: left; padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 500;
+      transition: border-color 180ms ease, color 180ms ease, transform 160ms ease; cursor: pointer;
+    }
+
+    .option.entering { opacity: 0; animation: stackFromRight 360ms ease forwards; }
+    .option:hover { border-color: hsl(25 45% 70%); color: hsl(20 22% 35%); }
+    .option.selected { border-color: var(--primary); color: var(--foreground); transform: translateY(-1px); animation: optionPop 180ms ease both; }
+
+    .option-marker {
+      width: 34px; height: 34px; border-radius: 50%; border: 2px solid hsl(30 20% 75%);
+      display: grid; place-items: center; flex: 0 0 auto; background: #fff;
+    }
+
+    .option-marker-icon { width: 16px; height: 16px; object-fit: contain; opacity: 0; transition: opacity 180ms ease; }
+    .option.selected .option-marker { border-color: var(--primary); }
+    .option.selected .option-marker-icon { opacity: 1; }
+
+    .survey-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .btn-ghost { border: 0; background: transparent; color: hsl(20 16% 62%); font-size: 17px; font-weight: 600; padding: 8px; cursor: pointer; }
+    .btn-ghost:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-next { min-width: 136px; min-height: 46px; font-size: 17px; border-radius: 16px; padding: 0 16px; }
+
+    .thanks { text-align: center; }
+    .thanks-note {
+      margin: 22px auto 0; border: 1px solid hsl(25 40% 86%); background: hsl(25 55% 96% / 0.7);
+      color: var(--primary); border-radius: 16px; padding: 14px 16px; font-size: 14px;
+      max-width: 520px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+
+    .profile-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: hsl(0 0% 10% / 0.4);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .profile-modal.show {
+      display: flex;
+      animation: fadeIn 240ms ease both;
+    }
+
+    .profile-card {
+      width: min(100%, 362px);
+      border-radius: 22px;
+      background: hsl(30 30% 99%);
+      box-shadow: 0 20px 46px hsl(20 20% 12% / 0.29);
+      padding: 26px 22px 22px;
+      text-align: center;
+      animation: cardPop 280ms ease both;
+    }
+
+    .profile-stage {
+      display: none;
+    }
+
+    .profile-stage.active {
+      display: block;
+      animation: fadeUp 260ms ease both;
+    }
+
+    .profile-badge {
+      width: 64px;
+      height: 64px;
+      margin: 4px auto 16px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: hsl(30 28% 92%);
+      color: var(--primary);
+    }
+
+    .profile-badge .loading-c-icon {
+      width: 34px;
+      height: 34px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transform-origin: 50% 50%;
+      animation: spinSoft 1.8s linear infinite;
+    }
+
+    .profile-badge.success {
+      width: 62px;
+      height: 62px;
+      background: hsl(141 56% 82%);
+      color: hsl(142 72% 36%);
+    }
+
+    .profile-badge.success svg {
+      width: 31px;
+      height: 31px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.1;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .profile-title {
+      margin: 0 0 9px;
+      font-family: var(--font-playfair);
+      font-size: 42px;
+      line-height: 1.02;
+      letter-spacing: -0.01em;
+      color: hsl(20 30% 16%);
+    }
+
+    .profile-title.loading {
+      font-size: 36px;
+      line-height: 1.03;
+      margin-bottom: 8px;
+    }
+
+    .profile-title.success {
+      font-size: 40px;
+      line-height: 1.02;
+      margin-bottom: 10px;
+    }
+
+    .profile-subtitle {
+      margin: 0 auto;
+      max-width: 286px;
+      color: hsl(20 16% 45%);
+      font-size: 14px;
+      line-height: 1.43;
+    }
+
+    .profile-subtitle.loading {
+      max-width: 292px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .profile-subtitle.success {
+      max-width: 282px;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .profile-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .profile-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: hsl(25 60% 42% / 0.48);
+      animation: dotPulse 1s ease-in-out infinite;
+    }
+
+    .profile-dots span:nth-child(2) { animation-delay: 120ms; }
+    .profile-dots span:nth-child(3) { animation-delay: 240ms; }
+
+    .profile-next {
+      margin-top: 16px;
+      min-height: 42px;
+      border-radius: 13px;
+      font-size: 14px;
+      font-weight: 600;
+      width: 100%;
+      box-shadow: none;
+    }
+
+    .profile-debug {
+      margin-top: 8px;
+      width: 100%;
+      min-height: 42px;
+      border-radius: 12px;
+      border: 1px solid hsl(30 24% 78%);
+      background: hsl(30 28% 97%);
+      color: hsl(20 20% 36%);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    #campaignScreen { padding-top: 16px; }
+    #campaignScreen .title-main { font-size: clamp(54px, 9.2vw, 68px); line-height: 1.02; margin-bottom: 12px; }
+    #campaignScreen .sub { max-width: 470px; line-height: 1.5; margin-bottom: 18px; }
+
+    #campaignScreen.active .logo-badge,
+    #campaignScreen.active .brand,
+    #campaignScreen.active .title-main,
+    #campaignScreen.active .sub,
+    #campaignScreen.active .promo,
+    #campaignScreen.active .center {
+      animation: riseIn 420ms ease both;
+    }
+
+    #campaignScreen.active .brand { animation-delay: 60ms; }
+    #campaignScreen.active .title-main { animation-delay: 110ms; }
+    #campaignScreen.active .sub { animation-delay: 170ms; }
+    #campaignScreen.active .promo { animation-delay: 420ms; }
+    #campaignScreen.active .center { animation-delay: 470ms; }
+    #campaignScreen.active .step-card { animation: cardIn 420ms ease both; }
+    #campaignScreen.active .step-card:nth-child(1) { animation-delay: 220ms; }
+    #campaignScreen.active .step-card:nth-child(2) { animation-delay: 280ms; }
+    #campaignScreen.active .step-card:nth-child(3) { animation-delay: 340ms; }
+    #campaignScreen.active .step-card:nth-child(4) { animation-delay: 400ms; }
+
+    #dataScreen.active h2,
+    #dataScreen.active .sub {
+      animation: riseIn 360ms ease both;
+    }
+
+    #dataScreen.active .field,
+    #dataScreen.active .data-next {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 360ms ease both;
+    }
+
+    #dataScreen.active .field:nth-of-type(1) { animation-delay: 120ms; }
+    #dataScreen.active .field:nth-of-type(2) { animation-delay: 170ms; }
+    #dataScreen.active .field:nth-of-type(3) { animation-delay: 220ms; }
+    #dataScreen.active .field:nth-of-type(4) { animation-delay: 270ms; }
+    #dataScreen.active .field:nth-of-type(5) { animation-delay: 320ms; }
+    #dataScreen.active .data-next { animation-delay: 380ms; }
+
+    @media (max-width: 768px) {
+      .data-screen { padding: 14px 10px 0; }
+
+      .data-screen h2 {
+        font-size: 54px !important;
+        line-height: 1.02 !important;
+      }
+
+      .data-screen .sub {
+        font-size: 16px !important;
+        margin-bottom: 20px;
+      }
+
+      .field label {
+        font-size: 13.5px;
+      }
+
+      .input-wrap {
+        min-height: 48px;
+      }
+
+      .input-wrap input {
+        font-size: 14px;
+      }
+
+      .data-next {
+        min-height: 52px;
+        font-size: 16px;
+      }
+    }
+
+    @keyframes screenIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes screenInX { from { opacity: 0; transform: translateX(44px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideQuestionIn { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes stackFromRight { from { opacity: 0; transform: translateX(36px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes riseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+    @keyframes optionPop { 0% { transform: translateY(0); } 55% { transform: translateY(-3px); } 100% { transform: translateY(-1px); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes cardPop { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes spinSoft { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes dotPulse { 0%,100% { opacity: 0.45; transform: scale(0.92); } 50% { opacity: 1; transform: scale(1); } }
+    @keyframes btnHop {
+      0% { transform: translateY(-1px); }
+      40% { transform: translateY(-4px); }
+      100% { transform: translateY(-1px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="shape top"></div>
+    <div class="shape logo-halo"></div>
+    <div class="shape bottom"></div>
+    <div class="shape mid"></div>
+
+    <div class="layout">
+      <section class="screen active" id="campaignScreen">
+        <div class="logo-badge" aria-label="Espaco reservado para logo">
+          <img src="logo.png" alt="Logo da campanha" onerror="this.style.display='none'" />
+        </div>
+        <p class="brand">CACAU SHOW</p>
+        <h1 class="title-main">Páscoa <span class="primary">Solidária</span></h1>
+        <p class="sub">Siga os passos abaixo e garanta o seu chocolate especial de Páscoa com condições exclusivas!</p>
+
+        <div class="steps">
+          <article class="step-card"><div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.8 18.2c0-3.1 2.4-5.2 5.2-5.2s5.2 2.1 5.2 5.2"></path><path d="M18 7v6"></path><path d="M15 10h6"></path></svg></div><div class="step-text"><p class="step-title"><span class="prefix">Passo 1 :</span> Cadastre-se</p><p class="step-desc">Informe seus dados. Esta campanha é única por CPF - cada pessoa pode participar apenas uma vez.</p></div></article>
+          <article class="step-card"><div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="16" rx="2"></rect><path d="M9 8h6"></path><path d="M9 12h6"></path><path d="M9 16h4"></path></svg></div><div class="step-text"><p class="step-title"><span class="prefix">Passo 2 :</span> Responder ao questionário</p><p class="step-desc">Responda algumas perguntas rápidas sobre hábitos de compra de chocolates.</p></div></article>
+          <article class="step-card"><div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="18" cy="19" r="2"></circle><path d="M8 11l8-5"></path><path d="M8 13l8 5"></path></svg></div><div class="step-text"><p class="step-title"><span class="prefix">Passo 3 :</span> Compartilhe com amigos</p><p class="step-desc">Indique pelo menos 3 amigos ou familiares para participarem também da campanha.</p></div></article>
+          <article class="step-card"><div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8a3 3 0 0 1 6 0"></path><path d="M10 12h4"></path></svg></div><div class="step-text"><p class="step-title"><span class="prefix">Passo 4 :</span> Escolha e retire</p><p class="step-desc">Escolha seu produto e retire-se em uma loja participante do programa mais próxima de você.</p></div></article>
+        </div>
+
+        <p class="promo">⚠️ Promoção válida <strong>1 participação por CPF.</strong> Não acumulável com outras ofertas.</p>
+        <div class="center"><button class="btn btn-primary" id="joinBtn" type="button">Quero Participar <span class="btn-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span></button></div>
+      </section>
+
+      <section class="screen data-screen" id="dataScreen">
+        <h2>Seus dados</h2>
+        <p class="sub">Preencha para participar da campanha. Suas informações ficam seguras com a gente.</p>
+
+        <form class="form" id="dataForm" novalidate>
+          <div class="field"><label for="fullName">Nome completo</label><div class="input-wrap"><span class="input-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 18c0-3.4 2.8-5.8 6.5-5.8s6.5 2.4 6.5 5.8"></path></svg></span><input id="fullName" name="fullName" placeholder="Seu nome completo" required /></div></div>
+          <div class="field"><label for="cpf">CPF</label><div class="input-wrap"><span class="input-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="2"></rect><path d="M7 10h10"></path></svg></span><input id="cpf" name="cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" required /></div></div>
+          <div class="field"><label for="email">E-mail</label><div class="input-wrap"><span class="input-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"></rect><path d="m5 7 7 5 7-5"></path></svg></span><input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required /></div></div>
+          <div class="field"><label for="phone">WhatsApp / Telefone</label><div class="input-wrap"><span class="input-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8c0-.8.5-1.3 1.2-1.3h1.6c.6 0 1 .4 1.2.9l.8 2.6c.2.5.1 1-.2 1.4l-1 1.2a13 13 0 0 0 4 4l1.2-1c.4-.3.9-.4 1.4-.2l2.6.8c.5.2.9.6.9 1.2v1.6c0 .7-.5 1.2-1.3 1.2C12.2 18.2 5.8 11.8 7 4.8z"></path></svg></span><input id="phone" name="phone" placeholder="(00) 00000-0000" inputmode="numeric" maxlength="15" required /></div></div>
+          <div class="field"><label for="cep">CEP</label><div class="input-wrap"><span class="input-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s6-5.4 6-10a6 6 0 1 0-12 0c0 4.6 6 10 6 10z"></path><circle cx="12" cy="10" r="2"></circle></svg></span><input id="cep" name="cep" placeholder="00000-000" inputmode="numeric" maxlength="9" required /></div></div>
+          <button class="btn btn-primary data-next" id="dataNextBtn" type="submit">Continuar para a pesquisa <span class="btn-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span></button>
+          <button class="btn profile-debug" id="previewProfileBtn" type="button">Ver popup de perfil</button>
+        </form>
+      </section>
+
+      <section class="screen survey" id="surveyScreen" aria-label="Questionário da campanha">
+        <div class="progress-head"><span id="progressLabel">Pergunta 1 de 10</span><span class="percent" id="progressPercent">10%</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="step-row"><div class="step-badge" id="stepBadge">1</div><div class="step-line"></div></div>
+        <h2 class="question" id="questionText"></h2>
+        <div class="options" id="optionsWrap"></div>
+        <div class="survey-actions"><button class="btn-ghost" id="backBtn" type="button">← Voltar</button><button class="btn btn-primary btn-next" id="nextBtn" type="button" disabled>Próxima <span class="btn-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span></button></div>
+      </section>
+
+      <section class="screen thanks" id="thanksScreen">
+        <h2 class="title-main">Muito Obrigado!</h2>
+        <p class="sub" style="font-size:18px;">Suas respostas foram registradas com sucesso.</p>
+        <p class="sub" style="font-size:16px;">Sua participação nos ajuda a tornar a Páscoa mais especial para todos.</p>
+        <div class="thanks-note"><span>♡</span><span>Páscoa Solidária - Juntos por um mundo melhor</span></div>
+      </section>
+    </div>
+
+    <div class="profile-modal" id="profileModal" aria-live="polite" aria-modal="true" role="dialog">
+      <div class="profile-card">
+        <div class="profile-stage active" id="profileStageLoading">
+          <div class="profile-badge" aria-hidden="true">
+            <svg class="loading-c-icon" viewBox="0 0 24 24">
+              <path d="M17.8 6.8a7.6 7.6 0 1 0 0 10.4"></path>
+              <path d="M16.1 5.2c1.1 0 2 .9 2 2"></path>
+            </svg>
+          </div>
+          <h3 class="profile-title loading">Analisando seu perfil...</h3>
+          <p class="profile-subtitle loading">Verificando elegibilidade para a campanha Páscoa Solidária</p>
+          <div class="profile-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+        <div class="profile-stage" id="profileStageOk">
+          <div class="profile-badge success" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M8 12.2l2.6 2.6L16.4 9"></path></svg>
+          </div>
+          <h3 class="profile-title success">Perfil!</h3>
+          <p class="profile-subtitle success">Seu perfil é elegível para a Páscoa Solidária. Agora responda algumas perguntas rapidamente!</p>
+          <button class="btn btn-primary profile-next" id="profileContinueBtn" type="button">Continuar para o questionário</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var screens = {
+        campaign: document.getElementById("campaignScreen"),
+        data: document.getElementById("dataScreen"),
+        survey: document.getElementById("surveyScreen"),
+        thanks: document.getElementById("thanksScreen")
+      };
+
+      var joinBtn = document.getElementById("joinBtn");
+      var dataForm = document.getElementById("dataForm");
+      var dataNextBtn = document.getElementById("dataNextBtn");
+      var backBtn = document.getElementById("backBtn");
+      var nextBtn = document.getElementById("nextBtn");
+      var profileModal = document.getElementById("profileModal");
+      var profileStageLoading = document.getElementById("profileStageLoading");
+      var profileStageOk = document.getElementById("profileStageOk");
+      var profileContinueBtn = document.getElementById("profileContinueBtn");
+      var previewProfileBtn = document.getElementById("previewProfileBtn");
+      var cpfInput = document.getElementById("cpf");
+      var phoneInput = document.getElementById("phone");
+      var cepInput = document.getElementById("cep");
+
+      var progressLabel = document.getElementById("progressLabel");
+      var progressPercent = document.getElementById("progressPercent");
+      var progressFill = document.getElementById("progressFill");
+      var stepBadge = document.getElementById("stepBadge");
+      var questionText = document.getElementById("questionText");
+      var optionsWrap = document.getElementById("optionsWrap");
+
+      var questions = [
+        { key: "faixa_renda", question: "Qual é a sua faixa de renda mensal familiar?", options: ["Até 1 salário mínimo", "Entre 1 e 2 salários mínimos", "Entre 2 e 4 salários mínimos", "Acima de 4 salários mínimos"] },
+        { key: "pessoas_residencia", question: "Quantas pessoas vivem atualmente na sua residência?", options: ["Moro sozinho(a)", "2 pessoas", "3 a 4 pessoas", "5 ou mais pessoas"] },
+        { key: "frequencia_compra", question: "Com que frequência você costuma comprar chocolates ou produtos de Páscoa?", options: ["Todos os anos", "Apenas em algumas Páscoas", "Raramente", "Quase nunca"] },
+        { key: "opiniao_preco", question: "Na sua opinião, o preço dos ovos de Páscoa atualmente é:", options: ["Muito acessível", "Razoável", "Alto", "Muito alto"] },
+        { key: "participaria_campanha", question: "Caso tivesse acesso a condições especiais, você participaria de campanhas de Páscoa com preços mais acessíveis?", options: ["Sim", "Talvez", "Não"] },
+        { key: "comprou_cacau_show", question: "Você já comprou produtos da Cacau Show anteriormente?", options: ["Sim, frequentemente", "Sim, algumas vezes", "Já ouvi falar, mas nunca comprei", "Não conheço a marca"] },
+        { key: "fator_decisao", question: "Qual desses fatores mais influencia sua decisão ao comprar chocolate?", options: ["Preço", "Qualidade do produto", "Marca", "Indicação de outras pessoas"] },
+        { key: "campanhas_solidarias", question: "Você acredita que campanhas solidárias de grandes marcas podem ajudar mais pessoas a participarem de datas especiais como a Páscoa?", options: ["Sim, com certeza", "Sim, em parte", "Talvez", "Não"] },
+        { key: "compartilhar_experiencia", question: "Se selecionado para a campanha Páscoa Solidária, você estaria disposto a compartilhar sua experiência com outras pessoas?", options: ["Sim", "Talvez", "Não"] },
+        { key: "como_soube", question: "Como você ficou sabendo da campanha Páscoa Solidária?", options: ["Redes sociais", "Indicação de amigos", "Anúncio na internet", "Outros"] }
+      ];
+
+      var currentIndex = 0;
+      var answers = {};
+      var arrowIcon = '<span class="btn-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>';
+
+      function setScreen(name) {
+        Object.keys(screens).forEach(function (key) {
+          screens[key].classList.toggle("active", key === name);
+        });
+      }
+
+      function showProfilePopup(onDone) {
+        profileStageLoading.classList.add("active");
+        profileStageOk.classList.remove("active");
+        profileModal.classList.add("show");
+
+        setTimeout(function () {
+          profileStageLoading.classList.remove("active");
+          profileStageOk.classList.add("active");
+        }, 2800);
+
+        profileContinueBtn.onclick = function () {
+          profileModal.classList.remove("show");
+          profileStageOk.classList.remove("active");
+          profileStageLoading.classList.add("active");
+          if (typeof onDone === "function") onDone();
+        };
+      }
+
+      function maskCPF(value) {
+        var digits = value.replace(/\D/g, "").slice(0, 11);
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 6) return digits.slice(0, 3) + "." + digits.slice(3);
+        if (digits.length <= 9) return digits.slice(0, 3) + "." + digits.slice(3, 6) + "." + digits.slice(6);
+        return digits.slice(0, 3) + "." + digits.slice(3, 6) + "." + digits.slice(6, 9) + "-" + digits.slice(9);
+      }
+
+      function maskPhone(value) {
+        var digits = value.replace(/\D/g, "").slice(0, 11);
+        if (digits.length <= 2) return digits.length ? "(" + digits : "";
+        if (digits.length <= 6) return "(" + digits.slice(0, 2) + ") " + digits.slice(2);
+        if (digits.length <= 10) return "(" + digits.slice(0, 2) + ") " + digits.slice(2, 6) + "-" + digits.slice(6);
+        return "(" + digits.slice(0, 2) + ") " + digits.slice(2, 7) + "-" + digits.slice(7);
+      }
+
+      function maskCEP(value) {
+        var digits = value.replace(/\D/g, "").slice(0, 8);
+        if (digits.length <= 5) return digits;
+        return digits.slice(0, 5) + "-" + digits.slice(5);
+      }
+
+      function progressOf(index) {
+        return Math.round(((index + 1) / questions.length) * 100);
+      }
+
+      function renderQuestion(animate) {
+        var shouldAnimate = animate !== false;
+        var item = questions[currentIndex];
+        var selected = answers[item.key] || "";
+        var percent = progressOf(currentIndex);
+
+        progressLabel.textContent = "Pergunta " + (currentIndex + 1) + " de " + questions.length;
+        progressPercent.textContent = percent + "%";
+        progressFill.style.width = percent + "%";
+        stepBadge.textContent = String(currentIndex + 1);
+
+        questionText.classList.remove("entering");
+        questionText.textContent = item.question;
+        if (shouldAnimate) {
+          void questionText.offsetWidth;
+          questionText.classList.add("entering");
+        }
+
+        backBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = !selected;
+        nextBtn.innerHTML = currentIndex === questions.length - 1 ? "Enviar ✓" : "Próxima " + arrowIcon;
+
+        optionsWrap.innerHTML = "";
+        item.options.forEach(function (optionText, optionIndex) {
+          var optionBtn = document.createElement("button");
+          optionBtn.type = "button";
+          optionBtn.className = "option" + (selected === optionText ? " selected" : "") + (shouldAnimate ? " entering" : "");
+          if (shouldAnimate) optionBtn.style.animationDelay = (optionIndex * 70) + "ms";
+
+          var marker = document.createElement("span");
+          marker.className = "option-marker";
+          var icon = document.createElement("img");
+          icon.className = "option-marker-icon";
+          icon.src = "verificar.png";
+          icon.alt = "Selecionado";
+          marker.appendChild(icon);
+
+          var label = document.createElement("span");
+          label.textContent = optionText;
+
+          optionBtn.appendChild(marker);
+          optionBtn.appendChild(label);
+
+          optionBtn.addEventListener("click", function () {
+            answers[item.key] = optionText;
+            renderQuestion(false);
+          });
+
+          optionsWrap.appendChild(optionBtn);
+        });
+      }
+
+      function finishSurvey() {
+        var formData = {
+          fullName: document.getElementById("fullName").value.trim(),
+          cpf: document.getElementById("cpf").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          cep: document.getElementById("cep").value.trim()
+        };
+
+        document.body.setAttribute("data-user", JSON.stringify(formData));
+        document.body.setAttribute("data-answers", JSON.stringify(answers));
+        setScreen("thanks");
+      }
+
+      joinBtn.addEventListener("click", function () {
+        setScreen("data");
+      });
+
+      cpfInput.addEventListener("input", function () {
+        cpfInput.value = maskCPF(cpfInput.value);
+      });
+
+      phoneInput.addEventListener("input", function () {
+        phoneInput.value = maskPhone(phoneInput.value);
+      });
+
+      cepInput.addEventListener("input", function () {
+        cepInput.value = maskCEP(cepInput.value);
+      });
+
+      previewProfileBtn.addEventListener("click", function () {
+        showProfilePopup();
+      });
+
+      dataForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        showProfilePopup(function () {
+          setScreen("survey");
+          currentIndex = 0;
+          answers = {};
+          renderQuestion(true);
+        });
+      });
+
+      backBtn.addEventListener("click", function () {
+        if (currentIndex === 0) return;
+        currentIndex -= 1;
+        renderQuestion(true);
+      });
+
+      nextBtn.addEventListener("click", function () {
+        var key = questions[currentIndex].key;
+        if (!answers[key]) return;
+
+        if (currentIndex < questions.length - 1) {
+          currentIndex += 1;
+          renderQuestion(true);
+          return;
+        }
+
+        nextBtn.disabled = true;
+        nextBtn.textContent = "Enviando...";
+        setTimeout(finishSurvey, 550);
+      });
+    })();
+  </script>
+</body>
+</html>
